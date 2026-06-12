@@ -1,15 +1,3 @@
-"""
-To-Do:
-    Task A: Change the code so it tracks three different trucks (DXB-001, DXB-002, DXB-003)
-            simultaneously inside the same loop, instead of just one.
-
-    Task B: Give each truck a different starting location in Dubai so they aren't driving
-            stacked on top of each other.
-
-    Task C: Add a new key-value pair to the payload called "speed". Use Python's built-in
-            random module to make the speed fluctuate between 60 and 80 (km/h) each loop cycle.
-"""
-
 import time
 import json
 import random
@@ -28,7 +16,9 @@ while True:
         current_time = int(time.time())
 
         vehicle["lat"] += 0.0002
+        vehicle["lat"] = round(vehicle["lat"], 4)
         vehicle["lng"] += 0.0003
+        vehicle["lng"] = round(vehicle["lng"], 4)
 
         vehicle["fuel"] -= random.uniform(0.1, 0.3)
         vehicle["fuel"] = max(0, round(vehicle["fuel"], 2))
