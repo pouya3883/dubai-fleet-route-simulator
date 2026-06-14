@@ -63,3 +63,36 @@ def receive_telemetry(data: VehicleTelemetry):
         f"--> Saved to Database | Truck: {data.vehicle_id} | Speed: {data.speed} km/h"
     )
     return {"status": "success", "stored_vehicle_id": data.vehicle_id}
+
+
+@app.get("/vehicles/latest")
+def get_latest_vehicles():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT vehicle_id, lat, lng, fuel, speed, timestamp
+        FROM (
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY vehicle_id ORDER BY id DESC) as rn
+            FROM telemetry
+        ) WHERE rn = 1
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+
+    vehicle_data = []
+    for row in rows:
+        vehicle_data.append(
+            {
+                "vehicle_id": row[0],
+                "lat": row[1],
+                "lng": row[2],
+                "fuel": row[3],
+                "speed": row[4],
+                "timestamp": row[5],
+            }
+        )
+
+    return vehicle_data
