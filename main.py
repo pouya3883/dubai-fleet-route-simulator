@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import sqlite3
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Smart City IoT Ingestion API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DB_FILE = "smart_city.db"
 
